@@ -5,28 +5,51 @@ var tasks = []
 $("#currentDay").text(time.format("dddd, MMMM Do YYYY"));
 
 //load entry
-var loadTasks = function() {
-    var tasks = JSON.parse(localStorage.getItem("tasks"));
+var loadTasks = function () {
+    $("textarea").each(function (index, value) {
+        
+        var task = JSON.parse(localStorage.getItem("hour-" + $this.attr("id")));
 
-    $("#9").text(tasks.text);
-    
-    
+        if (task) {
+            $this.val(task);
+        }
+    });
+};
 
-}
-loadTasks();
+
 
 
 //Save entry
-$(".saveBtn").on("click", function(){
+$(".saveBtn").on("click", function () {
     var textContent = $(this).siblings("textarea").val();
     var textId = $(this).siblings("textarea").attr("id");
-    tasks = {
-        text: textContent,
-        id: textId
-    }
-    
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    console.log("Saving '" + textContent + "' under ID '" + textId + "'.");
+    localStorage.setItem(JSON.stringify(textId), JSON.stringify(textContent));
 });
+
+setInterval(function() {
+    $(".time-block").each(function(index, el){
+        blockTime = parseInt($(this).attr("id"));
+        realTime = parseInt(moment().format("H"))
+        $(this).removeClass("past present future");
+        console.log(realTime);
+        console.log(blockTime);
+        if (blockTime < realTime) {
+            $(this).addClass("past");
+            blockTime = "";
+        }
+        else if (blockTime === realTime) {
+            $(this).addClass("present");
+            blockTime = "";
+        }
+        else if(blockTime > realTime) {
+            $(this).addClass("future");
+            blockTime = "";
+        }
+        console.log("What the fuck")
+    })
+}, 5000);
 
 
 //$(".task").on("click", "p", function() {
