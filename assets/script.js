@@ -6,35 +6,50 @@ $("#currentDay").text(time.format("dddd, MMMM Do YYYY"));
 
 //load entry
 var loadTasks = function () {
-    $("textarea").each(function (index, value) {
-        
-        var task = JSON.parse(localStorage.getItem("hour-" + $this.attr("id")));
-
-        if (task) {
-            $this.val(task);
-        }
-    });
+    //var tasks = (localStorage.getItem("9"));
+    //console.log(tasks);
+    //$("textarea").each(function (index, value) {
+        //$(this).innerText = tasks.text;
+            //console.log(tasks.text);
+        $("textarea").each(function() {
+            var input = $(this).attr("id");
+            $(this).val(localStorage.getItem(input));
+        });
+            //console.log(localStorage.getItem("9"));
+        //$("#9").val(localStorage.getItem("9"));
+        //$("#15").val(localStorage.getItem("15"));
+    //});
 };
 
-
+loadTasks();
 
 
 //Save entry
 $(".saveBtn").on("click", function () {
     var textContent = $(this).siblings("textarea").val();
     var textId = $(this).siblings("textarea").attr("id");
-
+    //let task = {
+       // id : textId,
+       // text : textContent
+    //}
+    //tasks.push(task);
+    //tasks[textId].text = textContent;
+    localStorage.setItem(textId, textContent);
+    
     console.log("Saving '" + textContent + "' under ID '" + textId + "'.");
-    localStorage.setItem(JSON.stringify(textId), JSON.stringify(textContent));
+    //localStorage.setItem(JSON.stringify(textId), JSON.stringify(textContent));
 });
 
 setInterval(function() {
+    auditBackground();
+}, 5000);
+
+var auditBackground = function() {
     $(".time-block").each(function(index, el){
         blockTime = parseInt($(this).attr("id"));
         realTime = parseInt(moment().format("H"))
         $(this).removeClass("past present future");
-        console.log(realTime);
-        console.log(blockTime);
+        
         if (blockTime < realTime) {
             $(this).addClass("past");
             blockTime = "";
@@ -47,10 +62,10 @@ setInterval(function() {
             $(this).addClass("future");
             blockTime = "";
         }
-        console.log("What the fuck")
+        
     })
-}, 5000);
-
+}
+auditBackground();
 
 //$(".task").on("click", "p", function() {
     //var text = $(this)
